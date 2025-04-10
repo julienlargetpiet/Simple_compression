@@ -26,7 +26,7 @@ template <typename T, typename T2> unsigned int match(const std::vector<T> &sour
 };
 
 std::string nb_to_letter(unsigned int x) {
-  std::string alphabet_v = "^<>$;[]~`";
+  std::string alphabet_v = "^<>$;[]~";
   std::string rtn_str = "";
   unsigned int cnt = 1;
   unsigned int rest_val2;
