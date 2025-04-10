@@ -35,4 +35,6 @@ $ wc -c k
 15 k // We've saved 126 - (96 + 15) = 15 bits!
 ```
 
+# Forbidden characters
 
+Compression keys used for compression are `^<>$;[]~\\` and should not be used inside a document.
