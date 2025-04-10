@@ -1,6 +1,6 @@
 # Simple_compression
 
-A text compression algorithm based on the detection of the most frequent patterns and associate them to a compression key. The level of compression and the length of the repeated patterns have to be chosen.
+A text compression algorithm based on most frequent patterns detection and key compression association. The level of compression and the length of the repeated patterns have to be chosen.
 
 ## Example (compression and then decompression)
 
