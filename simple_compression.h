@@ -339,3 +339,32 @@ std::vector<std::string> get_all(std::string &path) {
   };
   return rtn_vec;
 };
+
+void compression_dir(std::string &path, unsigned int &n_pattern, std::string &k_file, unsigned int &level, std::string &out_f) {
+  std::vector<std::string> all_files = get_all(path);
+  std::string cur_file;
+  std::fstream out_file(out_f, std::ios::out);
+  out_file << "";
+  std::fstream out_file2(k_file, std::ios::out);
+  out_file2 << "";
+  out_file2.close();
+  unsigned int i = 0;
+  unsigned int i2;
+  unsigned int ref_len = path.length() + 1;
+  const unsigned int n = all_files.size();
+  std::string ref_path = path;
+  for (i = 0; i < n; ++i) {
+    cur_file = all_files[i];
+    compression2(cur_file, n_pattern, k_file, level, out_f);
+  };
+  std::fstream out_file3(k_file, std::ios::app);
+  out_file3 << ref_path << "\n";
+  for (i = 0; i < n; ++i) {
+    cur_file = all_files[i];
+    cur_file.erase(cur_file.begin(), cur_file.begin() + ref_len);
+    out_file3 << cur_file << "\n";
+  };
+  out_file3.close();
+};
+
+
