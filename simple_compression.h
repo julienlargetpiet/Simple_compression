@@ -134,6 +134,7 @@ void compression(std::string &inpt_file, unsigned int &n_pattern, std::string &k
   };
   std::fstream out_f2(out_file, std::ios::out);
   out_f2 << x;
+  out_f2.close();
 };
 
 void decompression(std::string &inpt_file, std::string &k_file, std::string &out_f) {
