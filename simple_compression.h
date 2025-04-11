@@ -203,6 +203,7 @@ void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_fi
 void compression(std::string &inpt_file, unsigned int &n_pattern, std::string &k_file, unsigned int &level, std::string &out_file) {
   std::fstream out_f(k_file, std::ios::out);
   out_f << "";
+  out_f.close();
   std::string x = "";
   std::fstream r_file(inpt_file);
   std::string currow;
