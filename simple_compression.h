@@ -109,6 +109,7 @@ void sub_compression(std::string &x, unsigned int &n_pattern, std::string &k_fil
     compressed_ptrn.push_back(x[i2]);
   };
   out_f << cur_key + compressed_ptrn + "\n";
+  out_f.close();
   for (i2 = 0; i2 < cur_maxv.size(); ++i2) {
     cur_idx = cur_maxv[i2];
     x.erase(x.begin() + cur_idx - sub_cnt, x.begin() + cur_idx + n_pattern - sub_cnt);
@@ -151,6 +152,7 @@ void compression2(std::string inpt_file, unsigned int n_pattern, std::string k_f
   };
   std::fstream out_f2(out_file, std::ios::app);
   out_f2 << x;
+  out_f2 << "*";
   out_f2.close();
 };
 
