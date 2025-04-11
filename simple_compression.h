@@ -134,7 +134,10 @@ void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_fi
   std::vector<std::deque<char>> ref_ptrns;
   const unsigned int n = x.length();
   const unsigned int nb_iter = n - n_pattern + 1;
+  std::fstream out_f(k_file, std::ios::app);
   if (n_pattern >= n) {
+    out_f << "*";
+    out_f.close();
     return;
   };
   std::deque<char> cur_pattern = {};
@@ -166,7 +169,6 @@ void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_fi
     i += 1;
   };
   freq_pattern.pop_back();
-  std::fstream out_f(k_file, std::ios::app);
   max_val = max(freq_pattern);
   max_idx = match(freq_pattern, max_val);
   cur_pattern = ref_ptrns[max_idx];
