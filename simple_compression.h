@@ -217,6 +217,7 @@ void decompression(std::string &inpt_file, std::string &k_file, std::string &out
   };
   x.pop_back();
   out_file << x;
+  out_file.close();
 };
 
 
