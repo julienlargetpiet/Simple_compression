@@ -3,6 +3,7 @@
 #include <deque>
 #include <fstream>
 #include <math.h>
+#include <filesystem>
 
 unsigned int max(const std::vector<unsigned int> &x) {
   unsigned int rtn = x[0];
@@ -137,6 +138,22 @@ void compression(std::string &inpt_file, unsigned int &n_pattern, std::string &k
   out_f2.close();
 };
 
+void compression2(std::string inpt_file, unsigned int n_pattern, std::string k_file, unsigned int level, std::string out_file) {
+  std::string x = "";
+  std::fstream r_file(inpt_file);
+  std::string currow;
+  while (getline(r_file, currow)) {
+    x += currow;
+    x.push_back('\\');
+  };
+  for (unsigned int cnt = 1; cnt <= level; ++cnt) {
+    sub_compression(x, n_pattern, k_file, cnt);
+  };
+  std::fstream out_f2(out_file, std::ios::app);
+  out_f2 << x;
+  out_f2.close();
+};
+
 void decompression(std::string &inpt_file, std::string &k_file, std::string &out_f) {
   std::fstream r_file(inpt_file);
   std::fstream r_k_file(k_file);
@@ -221,4 +238,25 @@ void decompression(std::string &inpt_file, std::string &k_file, std::string &out
 };
 
 
-
+std::vector<std::string> get_all(std::string &path) {
+  std::string cur_path;
+  std::string cur_path_dir_found;
+  std::deque<std::string> vec_dirname = {path};
+  std::vector<std::string> rtn_vec = {};
+  int n = 0;
+  while (n > -1) {
+    cur_path = vec_dirname[n];
+    for (const auto &entry : std::filesystem::directory_iterator(cur_path)) {
+      cur_path_dir_found = entry.path();
+      if (entry.is_directory()) {
+        vec_dirname.push_front(cur_path_dir_found);
+        n += 1;
+      } else {
+        rtn_vec.push_back(cur_path_dir_found);
+      };
+    };
+  vec_dirname.pop_back();
+  n -= 1;
+  };
+  return rtn_vec;
+};
