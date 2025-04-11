@@ -121,6 +121,83 @@ void sub_compression(std::string &x, unsigned int &n_pattern, std::string &k_fil
   };
 };
 
+void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_file, unsigned int cnt, unsigned int &goal_cnt) {
+  unsigned int i;
+  unsigned int i2;
+  unsigned int max_val;
+  unsigned int cur_idx;
+  unsigned int sub_cnt = 0;
+  unsigned int max_idx;
+  std::string cur_key;
+  std::string compressed_ptrn;
+  std::vector<unsigned int> cur_maxv = {};
+  std::vector<std::deque<char>> ref_ptrns;
+  const unsigned int n = x.length();
+  const unsigned int nb_iter = n - n_pattern + 1;
+  if (n_pattern >= n) {
+    return;
+  };
+  std::deque<char> cur_pattern = {};
+  std::deque<char> cur_pattern2;
+  for (i = 0; i < n_pattern; ++i) {
+    cur_pattern.push_back(x[i]);
+  };
+  std::vector<unsigned int> freq_pattern = {0};
+  freq_pattern.resize(nb_iter, 0);
+  i = 1;
+  while (i < nb_iter) {
+    cur_pattern2 = {};
+    for (i2 = 0; i2 < n_pattern; ++i2) {
+      cur_pattern2.push_back(x[i2]);
+    };
+    if (cur_pattern == cur_pattern2) {
+      freq_pattern[i - 1] += 1;
+    };
+    for (i2 = 1; i2 < nb_iter; ++i2) {
+      cur_pattern2.pop_front();
+      cur_pattern2.push_back(x[n_pattern + i2 - 1]);
+      if (cur_pattern == cur_pattern2) {
+        freq_pattern[i - 1] += 1;
+      };
+    };
+    ref_ptrns.push_back(cur_pattern);
+    cur_pattern.pop_front();
+    cur_pattern.push_back(x[n_pattern + i - 1]);
+    i += 1;
+  };
+  freq_pattern.pop_back();
+  std::fstream out_f(k_file, std::ios::app);
+  max_val = max(freq_pattern);
+  max_idx = match(freq_pattern, max_val);
+  cur_pattern = ref_ptrns[max_idx];
+  for (i2 = 0; i2 < ref_ptrns.size(); ++i2) {
+    if (cur_pattern == ref_ptrns[i2]) {
+      cur_maxv.push_back(i2);
+    };
+  };
+  cur_key = nb_to_letter(cnt);
+  compressed_ptrn = "";
+  for (i2 = cur_maxv[0]; i2 < cur_maxv[0] + n_pattern; ++i2) {
+    compressed_ptrn.push_back(x[i2]);
+  };
+  if (cnt < goal_cnt) {
+    out_f << cur_key + compressed_ptrn + "\n";
+  } else {
+    out_f << cur_key + compressed_ptrn + "*\n";
+  };
+  out_f.close();
+  for (i2 = 0; i2 < cur_maxv.size(); ++i2) {
+    cur_idx = cur_maxv[i2];
+    x.erase(x.begin() + cur_idx - sub_cnt, x.begin() + cur_idx + n_pattern - sub_cnt);
+    for (i = 0; i < cur_key.length(); ++i) {
+      x.insert(x.begin() + cur_idx - sub_cnt + i, cur_key[i]);
+    };
+    sub_cnt += n_pattern;
+    sub_cnt -= cur_key.length();
+  };
+};
+
+
 void compression(std::string &inpt_file, unsigned int &n_pattern, std::string &k_file, unsigned int &level, std::string &out_file) {
   std::fstream out_f(k_file, std::ios::out);
   out_f << "";
@@ -148,7 +225,7 @@ void compression2(std::string inpt_file, unsigned int n_pattern, std::string k_f
     x.push_back('\\');
   };
   for (unsigned int cnt = 1; cnt <= level; ++cnt) {
-    sub_compression(x, n_pattern, k_file, cnt);
+    sub_compression2(x, n_pattern, k_file, cnt, level);
   };
   std::fstream out_f2(out_file, std::ios::app);
   out_f2 << x;
