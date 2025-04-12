@@ -136,7 +136,7 @@ std::string sub_compression2(std::string &x, unsigned int &n_pattern, std::strin
   const unsigned int nb_iter = n - n_pattern + 1;
   std::fstream out_f(k_file, std::ios::app);
   if (n_pattern >= n) {
-    out_f << "*\n";
+    out_f << "*";
     out_f.close();
     return x;
   };
