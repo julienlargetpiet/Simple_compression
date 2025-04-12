@@ -121,7 +121,7 @@ void sub_compression(std::string &x, unsigned int &n_pattern, std::string &k_fil
   };
 };
 
-void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_file, unsigned int cnt, unsigned int &goal_cnt) {
+std::string sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_file, unsigned int cnt, unsigned int &goal_cnt) {
   unsigned int i;
   unsigned int i2;
   unsigned int max_val;
@@ -138,7 +138,7 @@ void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_fi
   if (n_pattern >= n) {
     out_f << "*";
     out_f.close();
-    return;
+    return x;
   };
   std::deque<char> cur_pattern = {};
   std::deque<char> cur_pattern2;
@@ -197,6 +197,7 @@ void sub_compression2(std::string &x, unsigned int &n_pattern, std::string &k_fi
     sub_cnt += n_pattern;
     sub_cnt -= cur_key.length();
   };
+  return x;
 };
 
 
@@ -221,6 +222,7 @@ void compression(std::string &inpt_file, unsigned int &n_pattern, std::string &k
 
 void compression2(std::string inpt_file, unsigned int n_pattern, std::string k_file, unsigned int level, std::string out_file) {
   std::string x = "";
+  std::string x_ref;
   std::fstream r_file(inpt_file);
   std::string currow;
   while (getline(r_file, currow)) {
@@ -228,7 +230,11 @@ void compression2(std::string inpt_file, unsigned int n_pattern, std::string k_f
     x.push_back('\\');
   };
   for (unsigned int cnt = 1; cnt <= level; ++cnt) {
-    sub_compression2(x, n_pattern, k_file, cnt, level);
+    x_ref = x;
+    x = sub_compression2(x, n_pattern, k_file, cnt, level);
+    if (x_ref == x) {
+      break;
+    };
   };
   std::fstream out_f2(out_file, std::ios::app);
   out_f2 << x;
