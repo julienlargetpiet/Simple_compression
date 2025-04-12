@@ -325,7 +325,7 @@ void decompression(std::string &inpt_file, std::string &k_file, std::string &out
   out_file.close();
 };
 
-std::string decompression2(std::string &inpt_file, std::string &k_file, std::string &out_f) {
+std::string decompression2(std::string &inpt_file, std::string &k_file) {
   std::string currow;
   std::string x = inpt_file;
   std::vector<std::deque<char>> keys_valv = {};
