@@ -319,6 +319,82 @@ void decompression(std::string &inpt_file, std::string &k_file, std::string &out
   out_file.close();
 };
 
+std::string decompression2(std::string &inpt_file, std::string &k_file, std::string &out_f) {
+  std::string currow;
+  std::string x = inpt_file;
+  std::vector<std::deque<char>> keys_valv = {};
+  std::vector<std::deque<char>> keys_keyv = {};
+  int i;
+  unsigned int i2;
+  unsigned int i3;
+  unsigned int cur_len;
+  unsigned int cur_len2;
+  std::deque<char> cur_keyval;
+  std::deque<char> cur_pattern;
+  std::deque<char> cur_key;
+  unsigned int n;
+  unsigned int cnt = 1;
+  unsigned int cnt2 = 1;
+  const unsigned int n_k = k_file.length();
+  i = 0;
+  while (i < n_k) {
+    cur_keyval = {};
+    while (i < cnt2) {
+      cur_keyval.push_back(k_file[i]);
+      i += 1;
+    };
+    keys_keyv.push_back(cur_keyval);
+    cur_keyval = {};
+    while (k_file[i] != '\\') {
+      cur_keyval.push_back(k_file[i]);
+      i += 1;
+    };
+    i += 1;
+    keys_valv.push_back(cur_keyval);
+    cnt += 1;
+    if (cnt > std::pow(8, cnt2)) {
+      cnt2 += 1;
+    };
+  };
+  for (i = keys_keyv.size() - 1; i > -1; --i) {
+    n = x.length();
+    cur_key = keys_keyv[i];
+    cur_keyval = keys_valv[i];
+    cur_len = cur_key.size();
+    cur_len2 = cur_keyval.size();
+    cur_pattern = {};
+    for (i2 = 0; i2 < cur_len; ++i2) {
+      cur_pattern.push_back(x[i2]);
+    };
+    if (cur_pattern == cur_key) {
+      x.erase(x.begin(), x.begin() + cur_len);
+      for (i3 = 0; i3 < cur_len2; ++i3) {
+        x.insert(x.begin() + i3, cur_keyval[i3]);
+      };
+    };
+    n = x.length();
+    i2 = 1;
+    while (i2 < n - cur_len + 1) {
+      cur_pattern.pop_front();
+      cur_pattern.push_back(x[cur_len + i2 - 1]);
+      if (cur_pattern == cur_key) {
+        x.erase(x.begin() + i2, x.begin() + cur_len + i2);
+        for (i3 = 0; i3 < cur_len2; ++i3) {
+          x.insert(x.begin() + i2 + i3, cur_keyval[i3]);
+        };
+        n = x.length();
+      };
+      i2 += 1;
+    };
+  };
+  for (i = 0; i < x.length() - 1; ++i) {
+    if (x[i] == '\\') {
+      x[i] = '\n';
+    };
+  };
+  x.pop_back();
+  return x;
+};
 
 std::vector<std::string> get_all(std::string &path) {
   std::string cur_path;
