@@ -55,6 +55,9 @@ int main() {
 };
 ```
 
+[Note]
+If a directory is empty it won't be taken in count.
+
 # Forbidden characters
 
 Compression keys used for compression are `^<>$;[]~\\*` and should not be used inside a document.
