@@ -2,7 +2,7 @@
 
 A text compression algorithm based on most frequent patterns detection and key compression association. The level of compression and the length of the repeated patterns have to be chosen.
 
-## Example (1 file compression and then decompression)
+## 1 file example (compression and then decompression)
 
 ```
 #include "simple_compression.h"
@@ -35,7 +35,7 @@ $ wc -c k
 15 k // We've saved 126 - (96 + 15) = 15 bits!
 ```
 
-## Example (1 file compression and then decompression)
+## Directory example (compression and then decompression)
 
 ```
 #include "simple_compression.h"
