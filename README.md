@@ -58,6 +58,66 @@ int main() {
 >[Note]
 >If a directory is empty it won't be taken in count.
 
+```
+$ tree teste_dir
+├── oui2.txt
+├── oui.txt
+├── teste_dira
+│   ├── a.txt
+│   └── sub_dir
+├── teste_dirb
+│   ├── a.txt
+│   ├── b.txt
+│   └── sub_dir
+│       ├── a.txt
+│       └── sub_dir
+└── teste_dirc
+    └── a.txt
+$ cat compressed_teste_file.txt
+>jour j'aime\la se^<et\<^\smp sop\*>jour j'aime\la se^<et\<^\smp sop\**>jour j'aime\la se^<et\<^\smp sop\*>jour j'aime\la se^<et\<^\smp sop\*>jour j'aime\la se^<et\<^\smp sop\*>jour j'aime\la se^<et\<^\smp sop\*
+$ cat k 
+^mou
+<le
+>Bon*
+^mou
+<le
+>Bon*
+*^mou
+<le
+>Bon*
+^mou
+<le
+>Bon*
+^mou
+<le
+>Bon*
+^mou
+<le
+>Bon*
+teste_dir
+oui2.txt
+oui.txt
+teste_dirb/b.txt
+teste_dirb/a.txt
+teste_dira/a.txt
+teste_dirc/a.txt
+teste_dirb/sub_dir/a.txt
+$ tree out_decompression
+out_decompression/
+└── teste_dir
+    ├── oui2.txt
+    ├── oui.txt
+    ├── teste_dira
+    │   └── a.txt
+    ├── teste_dirb
+    │   ├── a.txt
+    │   ├── b.txt
+    │   └── sub_dir
+    │       └── a.txt
+    └── teste_dirc
+        └── a.txt
+```
+
 # Forbidden characters
 
 Compression keys used for compression are `^<>$;[]~\\*` and should not be used inside a document.
