@@ -345,10 +345,12 @@ std::string decompression2(std::string &inpt_file, std::string &k_file) {
   i = 0;
   while (i < n_k) {
     cur_keyval = {};
-    while (i < cnt2) {
-      cur_keyval.push_back(k_file[i]);
-      i += 1;
+    i2 = 0;
+    while (i2 < cnt2) {
+      cur_keyval.push_back(k_file[i + i2]);
+      i2 += 1;
     };
+    i += i2;
     keys_keyv.push_back(cur_keyval);
     cur_keyval = {};
     while (k_file[i] != '\\') {
@@ -393,12 +395,11 @@ std::string decompression2(std::string &inpt_file, std::string &k_file) {
       i2 += 1;
     };
   };
-  for (i = 0; i < x.length() - 1; ++i) {
+  for (i = 0; i < x.length(); ++i) {
     if (x[i] == '\\') {
       x[i] = '\n';
     };
   };
-  x.pop_back();
   return x;
 };
 
@@ -450,6 +451,128 @@ void compression_dir(std::string &path, unsigned int &n_pattern, std::string &k_
     out_file3 << cur_file << "\n";
   };
   out_file3.close();
+};
+
+void create_filedata(std::string &path, std::string &data) {
+  std::fstream out_f(path, std::ios::out);
+  out_f << data;
+  out_f.close();
+};
+
+void create_filenodata(std::string &path) {
+  std::fstream out_f(path, std::ios::out);
+  out_f << "";
+  out_f.close();
+};
+
+void decompression_dir(std::string &inpt_file, std::string &k_file, std::string out_path = ".") {
+  std::string x = "";
+  std::string k_x = "";
+  std::string currow;
+  std::string cur_file;
+  std::string cur_dir;
+  std::string cur_x;
+  std::string cur_k;
+  std::string pre_path = "";
+  std::vector<std::string> all_files = {};
+  std::vector<std::string> all_dirs = {};
+  std::fstream r_k_file(k_file);
+  unsigned int strt_file;
+  unsigned int i = 0;
+  int i2;
+  int i3;
+  unsigned int n;
+  unsigned int n2;
+  unsigned int ref_strt_file;
+  bool not_found;
+  bool alrd_found;
+  while (getline(r_k_file, currow)) {
+    n = currow.length() + 1;
+    k_x += currow;
+    k_x.push_back('\\');
+    i += n;
+    if (currow[n - 2] == '*') {
+      strt_file = i;
+    };
+  };
+  n = i;
+  i = strt_file;
+  ref_strt_file = strt_file;
+  while (k_x[i] != '\\') {
+    pre_path.push_back(k_x[i]);
+    i += 1;
+  };
+  pre_path = out_path + "/" + pre_path;
+  std::filesystem::create_directories(pre_path);
+  pre_path.push_back('/');
+  strt_file = i + 1;
+  for (i = strt_file; i < n; ++i) {
+    if (k_x[i] != '\\') {
+      cur_file.push_back(k_x[i]);
+    } else {
+      i2 = cur_file.length() - 1;
+      while (i2 > -1) {
+        if (cur_file[i2] == '/') {
+          break;
+        };
+        i2 -= 1;
+      };
+      i3 = 0;
+      cur_dir = "";
+      while (i3 < i2) {
+        cur_dir.push_back(cur_file[i3]);
+        i3 += 1;
+      };
+      if (cur_dir != "") {
+        alrd_found = 0;
+        for (i3 = 0; i3 < all_dirs.size(); ++i3) {
+          if (cur_dir == all_dirs[i3]) {
+            alrd_found = 1;
+            break;
+          };
+        };
+      } else {
+        alrd_found = 1;
+      };
+      if (!alrd_found) {
+        all_dirs.push_back(cur_dir);
+        cur_dir = pre_path + cur_dir;
+        std::filesystem::create_directories(cur_dir);
+      };
+      all_files.push_back(cur_file);
+      cur_file = "";
+    };
+  };
+  n2 = all_files.size();
+  std::fstream r_x_file(inpt_file);
+  while (getline(r_x_file, currow)) {
+    x += currow;
+  };
+  i2 = 0;
+  i3 = 0;
+  for (i = 0; i < n2; ++i) {
+    cur_file = pre_path + all_files[i];
+    cur_k = "";
+    cur_x = "";
+    while (x[i2] != '*') {
+      cur_x.push_back(x[i2]);
+      i2 += 1;
+    };
+    while (k_x[i3] != '*') {
+      cur_k.push_back(k_x[i3]);
+      i3 += 1;
+    };
+    cur_k.push_back('\\');
+    if (cur_x != "") {
+      cur_x = decompression2(cur_x, cur_k);
+      create_filedata(cur_file, cur_x);
+      i3 += 2;
+    } else {
+      create_filenodata(cur_file);
+      i3 += 1;
+    };
+    i2 += 1;
+  };
 };
 
 
