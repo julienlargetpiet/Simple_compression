@@ -55,8 +55,8 @@ int main() {
 };
 ```
 
-[Note]
-If a directory is empty it won't be taken in count.
+>[Note]
+>If a directory is empty it won't be taken in count.
 
 # Forbidden characters
 
